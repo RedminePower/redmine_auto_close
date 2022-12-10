@@ -1,0 +1,4 @@
+# English strings go here for Rails i18n
+en:
+  label_auto_close: "Auto close"
+  label_auto_close_new: "New auto close"
