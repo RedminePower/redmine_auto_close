@@ -4,5 +4,10 @@ class AutoClosesController < ApplicationController
   before_action :require_admin
 
   def index
+
+  end
+
+  def new
+    @auto_close = AutoClose.new
   end
 end

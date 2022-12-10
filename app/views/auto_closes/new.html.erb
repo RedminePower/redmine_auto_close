@@ -1,1 +1,9 @@
-<h2>AutoClosesController#new</h2>
+<%= title [l(:label_auto_close_plural), auto_closes_path], l(:label_auto_close_new) %>
+
+<%= labelled_form_for :auto_close, @auto_close,
+        :url => auto_closes_path,
+        :html => {:multipart => true, :id => 'auto_close-form'} do |f| %>
+    <%= render :partial => 'auto_closes/form', :locals => {:form => f} %>
+    <%= f.submit l(:button_create) %>
+    <%= link_to l(:button_cancel), :controller => 'auto_closes', :action => 'index' %>
+<% end %>
