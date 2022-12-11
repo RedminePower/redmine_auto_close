@@ -3,4 +3,10 @@
       new_auto_close_path, :class => 'icon icon-add' %>
 </div>
 
-<h2>AutoClosesController#index</h2>
+<%= title l(:label_auto_close_plural) %>
+
+<% if (@auto_close.blank?) %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+
+<% end %>
