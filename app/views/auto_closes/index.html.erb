@@ -5,8 +5,39 @@
 
 <%= title l(:label_auto_close_plural) %>
 
-<% if (@auto_close.blank?) %>
+<% if (@auto_closes.blank?) %>
   <p class="nodata"><%= l(:label_no_data) %></p>
 <% else %>
+
+<table class="list auto_close">
+  <thead>
+    <tr>
+      <%= sort_header_tag('id', :caption => '#') %>
+      <%= sort_header_tag('is_enabled', :caption => l(:field_is_enabled)) %>
+      <%= sort_header_tag('title', :caption => l(:field_title)) %>
+      <%= sort_header_tag('project_pattern', :caption => l(:field_project_pattern)) %>
+      <%= sort_header_tag('trigger_type', :caption => l(:field_trigger_type)) %>
+      <%= sort_header_tag('trigger_tracker', :caption => l(:field_trigger_tracker)) %>
+      <%= sort_header_tag('trigger_status', :caption => l(:field_trigger_status)) %>
+      <%= sort_header_tag('trigger_custom_field', :caption => l(:field_trigger_custom_field)) %>
+      <%= sort_header_tag('trigger_custom_field_boolean', :caption => l(:field_trigger_custom_field_boolean)) %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @auto_closes.each do |auto_close| %>
+    <tr class="<%= cycle('odd', 'even') %><%= ' disable' unless auto_close.is_enabled %>">
+      <td class="id"><%= link_to auto_close.id, auto_close_path(auto_close.id) %></td>
+      <td class="is_enabled"><%=h auto_close.is_enabled ? l(:general_text_yes) : l(:general_text_no) %></td>
+      <td class="title"><%=h auto_close.title%></td>
+      <td class="project_pattern"><%=h auto_close.project_pattern%></td>
+      <td class="trigger_type"><%=h l(auto_close.trigger_type_label)%></td>
+      <td class="trigger_tracker"><%=h auto_close.trigger_tracker_label%></td>
+      <td class="trigger_status"><%=h auto_close.trigger_status_label%></td>
+      <td class="trigger_custom_field"><%=h auto_close.trigger_custom_field_label%></td>
+      <td class="trigger_custom_field_boolean"><%=h auto_close.trigger_custom_field_boolean ? l(:general_text_yes) : l(:general_text_no) %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
 
 <% end %>

@@ -3,24 +3,77 @@ class AutoClose < ActiveRecord::Base
 
   validate :valid_action
 
-  TRIGGERS_CHILDREN_CLOSED = "children closed"
-  TRIGGERS_EXPIRED = "expired"
+  TRIGGER_TYPES_CHILDREN_CLOSED = "children closed"
+  TRIGGER_TYPES_EXPIRED = "expired"
 
-  @@triggers = {
-    :label_triggers_child_closed => TRIGGERS_CHILDREN_CLOSED,
-    :label_triggers_expired => TRIGGERS_EXPIRED,
+  @@trigger_types = {
+    :label_triggers_child_closed => TRIGGER_TYPES_CHILDREN_CLOSED,
+    :label_triggers_expired => TRIGGER_TYPES_EXPIRED,
   }
 
-  def triggers
-    @@triggers
+  #------------------------------
+  # トリガ種類（選択肢）
+  #------------------------------
+  def trigger_types
+    @@trigger_types
+  end
+
+  #------------------------------
+  # トリガ種類（ラベル）
+  #------------------------------
+  def trigger_type_label
+    @@trigger_types.key(trigger_type)
+  end
+
+  #------------------------------
+  # トラッカー（ラベル）
+  #------------------------------
+  def trigger_tracker_label
+    if trigger_tracker.nil?
+      ""
+    else
+      temp = Tracker.find_by(id: trigger_tracker)
+      temp.nil? ? "" : temp.name
+    end
+  end
+
+  #------------------------------
+  # ステータス（ラベル）
+  #------------------------------
+  def trigger_status_label
+    if trigger_status.nil?
+      ""
+    else
+      temp = IssueStatus.find_by(id: trigger_status)
+      temp.nil? ? "" : temp.name
+    end
+  end
+
+  #------------------------------
+  # カスタムフィールド（ラベル）
+  #------------------------------
+  def trigger_custom_field_label
+    if trigger_custom_field.nil?
+      ""
+    else
+      temp = CustomField.find_by(id: trigger_custom_field)
+      temp.nil? ? "" : temp.name
+    end
+  end
+
+  #------------------------------
+  # トリガ カスタムフィールド （選択肢）
+  #------------------------------
+  def trigger_custom_fields
+    CustomField.where(field_format: 'bool')
   end
 
   def is_triger_child_closed?
-    trigger_type == TRIGGERS_CHILDREN_CLOSED
+    trigger_type == TRIGGER_TYPES_CHILDREN_CLOSED
   end
 
   def is_triger_expired?
-    trigger_type == TRIGGERS_EXPIRED
+    trigger_type == TRIGGER_TYPES_EXPIRED
   end
 
   def available?

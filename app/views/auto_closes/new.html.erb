@@ -3,7 +3,7 @@
 <%= labelled_form_for :auto_close, @auto_close,
         :url => auto_closes_path,
         :html => {:multipart => true, :id => 'auto_close-form'} do |f| %>
-    <%= render :partial => 'auto_closes/form', :locals => {:form => f} %>
+    <%= render :partial => 'auto_closes/form', :locals => {:form => f, :disabled => false} %>
     <%= f.submit l(:button_create) %>
     <%= link_to l(:button_cancel), :controller => 'auto_closes', :action => 'index' %>
 <% end %>

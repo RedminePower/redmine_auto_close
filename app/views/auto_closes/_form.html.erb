@@ -1,7 +1,9 @@
 <%= javascript_tag do %>
   $(function() {
     <%# 初期表示は非表示とする %>
-    $("#auto_close_action_user_area").hide();
+    if ($("#auto_close_trigger_type").val() != "expired") {
+      $("#auto_close_action_user_area").hide();
+    }
 
     <%# トリガ種類が変更されたら、動的に表示/非表示を切り替える %>
     $("#auto_close_trigger_type").change(function() {
@@ -21,19 +23,22 @@
   <p>
     <%= form.text_field :title,
         :size => 100,
-        :required => true %>
+        :required => true,
+        :disabled => (disabled || false)  %>
     <em class="info">
       <%= l(:text_title_info) %>
     </em>
   </p>
   <%# 有効 %>
   <p>
-    <%= form.check_box :is_enabled %>
+    <%= form.check_box :is_enabled,
+        :disabled => (disabled || false) %>
   </p>
   <%# プロジェクト %>
   <p>
     <%= form.text_field :project_pattern,
-        :size => 100 %>
+        :size => 100,
+        :disabled => (disabled || false) %>
     <em class="info">
       <%= l(:text_project_pattern_info) %><br />
       <%= l(:text_project_pattern_notset_info) %>
@@ -44,19 +49,23 @@
   <%# ******************************* %>
   <%= field_set_tag l(:label_trigger) do %>
     <%# トリガ種類 %>
+    <%# disabled と required を、二つ指定すると動作しなくなってしまったので、disabled を優先した。 %>
     <p>
       <%= form.select :trigger_type,
             options_for_select(
-              @auto_close.triggers.map {|key, val| [l(key), val]},
+              @auto_close.trigger_types.map {|key, val| [l(key), val]},
               :selected => @auto_close.trigger_type),
-            :required => true %>
+            {},
+            :disabled => (disabled ? true : false) %>
     </p>
     <%# トラッカー %>
     <p>
       <%= form.select :trigger_tracker,
             options_for_select(
               [""] + Tracker.all.map{|t| [t.name, t.id]},
-              :selected => @auto_close.trigger_tracker) %>
+              :selected => @auto_close.trigger_tracker),
+              {},
+              :disabled => (disabled || false) %>
       <em class="info">
         <%= l(:text_trigger_tracker_info) %><br />
         <%= l(:text_trigger_tracker_notset_info) %>
@@ -67,10 +76,29 @@
       <%= form.select :trigger_status,
             options_for_select(
               [""] + IssueStatus.all.map{|t| [t.name, t.id]},
-              :selected => @auto_close.trigger_status) %>
+              :selected => @auto_close.trigger_status),
+              {},
+              :disabled => (disabled || false) %>
       <em class="info">
         <%= l(:text_trigger_status_info) %><br />
         <%= l(:text_trigger_status_notset_info) %>
+      </em>
+    </p>
+    <%# カスタムフィールド %>
+    <p>
+      <%= form.select :trigger_custom_field,
+            options_for_select(
+              [""] + @auto_close.trigger_custom_fields.all.map{|t| [t.name, t.id]},
+              :selected => @auto_close.trigger_custom_field),
+              {},
+              :disabled => (disabled || false) %>
+    </p>
+    <p>
+      <%= form.check_box :trigger_custom_field_boolean,
+      :disabled => (disabled || false) %>
+      <em class="info">
+        <%= l(:text_trigger_custom_field_info) %><br />
+        <%= l(:text_trigger_custom_field_notset_info) %>
       </em>
     </p>
   <% end %><br />
@@ -83,8 +111,10 @@
     <p id="auto_close_action_user_area">
       <%= form.select :action_user,
             options_for_select(
-              User.where(status: 1).collect{|u| [u.name,u.mail]},
-              :selected => @auto_close.action_status) %>
+              User.where(status: 1).collect{|u| [u.name, u.id]},
+              :selected => @auto_close.action_user),
+              {},
+              :disabled => (disabled || false) %>
     </p>
 
     <%# ステータス %>
@@ -92,23 +122,29 @@
       <%= form.select :action_status,
             options_for_select(
               [""] + IssueStatus.all.map{|t| [t.name, t.id]},
-              :selected => @auto_close.action_status) %>
+              :selected => @auto_close.action_status),
+              {},
+              :disabled => (disabled || false) %>
     </p>
     <%# 担当 %>
     <p>
       <%= form.select :action_assinged_to,
             options_for_select(
               [""] + User.where(status: 1).collect{|u| [u.name,u.id]},
-              :selected => @auto_close.action_assinged_to) %>
+              :selected => @auto_close.action_assinged_to),
+              {},
+              :disabled => (disabled || false) %>
     </p>
     <%# 終了時コメント %>
     <p>
       <%= form.text_area :action_comment,
-       :rows => 12 %>
+       :rows => 12,
+       :disabled => (disabled || false) %>
     </p>
     <%# 親チケットにもコメントを残す %>
     <p>
-      <%= form.check_box :is_action_comment_parent %>
+      <%= form.check_box :is_action_comment_parent,
+      :disabled => (disabled || false) %>
     </p>
   <% end %>
 </div>
