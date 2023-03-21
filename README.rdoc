@@ -1,3 +1,0 @@
-= redmine_auto_close
-
-Description goes here
