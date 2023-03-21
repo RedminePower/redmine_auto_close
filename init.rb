@@ -1,9 +1,9 @@
 Redmine::Plugin.register :redmine_auto_close do
   name 'Redmine Auto Close plugin'
   author 'Redmine Power'
-  description 'This is a plugin for Redmine'
-  version '0.0.1'
-  url 'http://example.com/path/to/plugin'
+  description 'This plugin can close a ticket when a specified condition is triggered.'
+  version '1.0.0'
+  url 'https://github.com/RedminePower/redmine_auto_close'
   author_url 'https://www.en.redmine-power.com/'
 
   menu :admin_menu, :auto_closes,
