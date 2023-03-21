@@ -11,12 +11,13 @@ class CreateAutoCloses < ActiveRecord::Migration[5.2]
       t.text :project_pattern
       t.text :trigger_type
       t.integer :trigger_tracker
+      t.text :trigger_subject_pattern
       t.integer :trigger_status
       t.integer :trigger_custom_field
       t.boolean :trigger_custom_field_boolean, :default => true
       t.integer :action_user
       t.integer :action_status
-      t.integer :action_assinged_to
+      t.integer :action_assigned_to
       t.text :action_comment
       t.boolean :is_action_comment_parent
     end

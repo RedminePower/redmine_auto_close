@@ -71,6 +71,16 @@
         <%= l(:text_trigger_tracker_notset_info) %>
       </em>
     </p>
+    <%# 題名 %>
+  <p>
+    <%= form.text_field :trigger_subject_pattern,
+        :size => 100,
+        :disabled => (disabled || false) %>
+    <em class="info">
+      <%= l(:text_trigger_subject_pattern_info) %><br />
+      <%= l(:text_trigger_subject_pattern_notset_info) %>
+    </em>
+  </p>
     <%# ステータス %>
     <p>
       <%= form.select :trigger_status,
@@ -128,10 +138,10 @@
     </p>
     <%# 担当 %>
     <p>
-      <%= form.select :action_assinged_to,
+      <%= form.select :action_assigned_to,
             options_for_select(
               [""] + User.where(status: 1).collect{|u| [u.name,u.id]},
-              :selected => @auto_close.action_assinged_to),
+              :selected => @auto_close.action_assigned_to),
               {},
               :disabled => (disabled || false) %>
     </p>

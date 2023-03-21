@@ -1,4 +1,5 @@
 class AutoClose < ActiveRecord::Base
+  after_initialize :set_default_values
   validates_presence_of :title
 
   validate :valid_action
@@ -8,9 +9,9 @@ class AutoClose < ActiveRecord::Base
 
   @@trigger_types = {
     :label_triggers_child_closed => TRIGGER_TYPES_CHILDREN_CLOSED,
-    :label_triggers_expired => TRIGGER_TYPES_EXPIRED,
+#    :label_triggers_expired => TRIGGER_TYPES_EXPIRED,
   }
-
+    
   #------------------------------
   # トリガ種類（選択肢）
   #------------------------------
@@ -99,13 +100,28 @@ class AutoClose < ActiveRecord::Base
       end
     end
 
+    # トリガ題名パターンが設定されていた場合
+    if trigger_subject_pattern.present?
+      begin
+        Regexp.compile(trigger_subject_pattern)
+      rescue
+        errors.add(:trigger_subject_pattern, :invalid)
+      end
+    end
+   
     # アクションが一つも設定されていなかった場合
-    if action_status.blank? && action_assinged_to.blank? && action_comment.blank?
+    if action_status.blank? && action_assigned_to.blank? && action_comment.blank?
       errors.add(:action_status, l(:error_set_one_or_more_actios))
-      errors.add(:action_assinged_to, l(:error_set_one_or_more_actios))
+      errors.add(:action_assigned_to, l(:error_set_one_or_more_actios))
       errors.add(:action_comment, l(:error_set_one_or_more_actios))
     end
 
   end
 
+  private
+
+  def set_default_values
+    # 現時点では、全子チケット終了しかサポートしていないため、コンストラクタにて設定してしまう。
+    trigger_type = TRIGGER_TYPES_CHILDREN_CLOSED
+  end
 end

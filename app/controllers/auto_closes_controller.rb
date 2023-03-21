@@ -71,14 +71,16 @@ class AutoClosesController < ApplicationController
       .permit(
         :title, 
         :is_enabled,
+        :project_pattern,
         :trigger_type, 
         :trigger_tracker, 
+        :trigger_subject_pattern,
         :trigger_status, 
         :trigger_custom_field, 
         :trigger_custom_field_boolean, 
         :action_user, 
         :action_status, 
-        :action_assinged_to, 
+        :action_assigned_to, 
         :action_comment, 
         :is_action_comment_parent
       )
