@@ -30,6 +30,9 @@ module RedmineAutoClose
       # ステータスが変更になっていない場合は、何もしない。
       current_status_id = context[:issue].status_id_was
       next_status_id = context[:params][:issue][:status_id].to_i
+      if next_status_id.nil?
+        return
+      end
       if current_status_id == next_status_id 
         return
       end
