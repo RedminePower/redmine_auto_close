@@ -30,7 +30,7 @@ ja:
   text_trigger_tracker_notset_info: "未指定の場合は、トラッカーに関係なくトリガ対象とします。"
   text_trigger_subject_pattern_info: "チケットの題名を正規表現で指定します。 (例 機能追加|バグ)"
   text_trigger_subject_pattern_notset_info: "未指定の場合は、チケットの題名に関係なくトリガ対象とします。"
-  text_trigger_status_info: "トリガ対象となるチケットのスタータスを指定してください。"
+  text_trigger_status_info: "トリガ対象となるチケットのステータスを指定してください。"
   text_trigger_status_notset_info: "未指定の場合は、ステータスに関係なくトリガ対象とします。"
   text_trigger_custom_field_info: "トリガ対象となるチケットのカスタムフィールド(真偽値)を指定してください。"
   text_trigger_custom_field_notset_info: "未指定の場合は、カスタムフィールドに関係なくトリガ対象とします。"
