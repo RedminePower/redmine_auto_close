@@ -11,9 +11,10 @@
 
 ## 対応Redmine
 - V4.x (V4.2.3にて動作確認済み)
+- V5.x (V5.0.3にて動作確認済み)
 
 ## インストール
-- Redmineのプラグインのディレクトリにて、以下を実行してください。
+- Redmineのプラグインのディレクトリにて、以下を実行し、Redmineを再起動してください。
 
 ```
 $ cd /var/lib/redmine/plugins
@@ -22,19 +23,13 @@ $ bundle exec rake redmine:plugins:migrate NAME=redmine_auto_close RAILS_ENV=pro
 ```
 
 ## 使用方法
-プラグインをインストールすると、管理者メニューに「自動クローズ」が追加されます。
-
+1. プラグインをインストールすると、管理者メニューに「自動クローズ」が追加されます。
 ![image](https://user-images.githubusercontent.com/87136359/226633071-159626ee-aca0-4724-b651-187ca66de7b2.png)
-
-「自動クローズ」を押下すると、一覧画面に遷移します。
-
+1. 「自動クローズ」を押下すると、一覧画面に遷移します。
 ![image](https://user-images.githubusercontent.com/87136359/226633407-4cac6c54-d2fe-4d13-95fb-3c60c7ad765a.png)
-
-「新しい自動クローズ」を押下し、各種項目を入力し、「OK」ボタンを押下してください。
-
-![image](https://user-images.githubusercontent.com/87136359/226633705-caf445eb-c687-478a-bd71-f126856582ae.png)
-
-「トリガ」にて設定した条件を満たした場合に、「アクション」で指定した内容を実行します。
+1. 「新しい自動クローズ」を押下し、各種項目を入力し、「作成」ボタンを押下してください。
+![image](https://github.com/RedminePower/redmine_auto_close/assets/87136359/efb3281a-ea96-4f13-b99f-dcfaf70dfa14)
+1. 「トリガ」で設定した条件を満たした場合に、「アクション」で指定した内容を実行します。
 
 ## アンインストール
 
