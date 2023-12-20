@@ -4,7 +4,7 @@ Redmine::Plugin.register :redmine_auto_close do
   description 'This plugin can close a ticket when a specified condition is triggered.'
   version '1.0.0'
   url 'https://github.com/RedminePower/redmine_auto_close'
-  author_url 'https://www.en.redmine-power.com/'
+  author_url 'https://www.redmine-power.com/'
 
   menu :admin_menu, :auto_closes,
     { :controller => 'auto_closes', :action => 'index' },

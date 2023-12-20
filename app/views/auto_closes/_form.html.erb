@@ -72,15 +72,15 @@
       </em>
     </p>
     <%# 題名 %>
-  <p>
-    <%= form.text_field :trigger_subject_pattern,
-        :size => 100,
-        :disabled => (disabled || false) %>
-    <em class="info">
-      <%= l(:text_trigger_subject_pattern_info) %><br />
-      <%= l(:text_trigger_subject_pattern_notset_info) %>
-    </em>
-  </p>
+    <p>
+      <%= form.text_field :trigger_subject_pattern,
+          :size => 100,
+          :disabled => (disabled || false) %>
+      <em class="info">
+        <%= l(:text_trigger_subject_pattern_info) %><br />
+        <%= l(:text_trigger_subject_pattern_notset_info) %>
+      </em>
+    </p>
     <%# ステータス %>
     <p>
       <%= form.select :trigger_status,
