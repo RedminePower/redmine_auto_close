@@ -14,7 +14,7 @@
 - V5.x (V5.0.3にて動作確認済み)
 
 ## インストール
-- Redmineのプラグインのディレクトリにて、以下を実行し、Redmineを再起動してください。
+Redmineのプラグインのフォルダにて、以下を実行し、Redmineを再起動してください。
 
 ```
 $ cd /var/lib/redmine/plugins
@@ -33,7 +33,7 @@ $ bundle exec rake redmine:plugins:migrate NAME=redmine_auto_close RAILS_ENV=pro
 
 ## アンインストール
 
-- 以下のコマンドを実行して、追加したDBを削除後に、配置したプラグインフォルダを削除してください。
+以下のコマンドを実行して、追加したDBを削除し、プラグインのフォルダを削除してください。
 
 ```
 $ cd /var/lib/redmine/plugins
