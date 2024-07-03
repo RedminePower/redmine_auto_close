@@ -76,15 +76,23 @@ module RedmineAutoClose
         needUpdateflag = true
       end
 
-      # 担当が設定されていたら、担当を設定する。
+      # 終了時の担当者が設定されていたら適用する。
       if !item.action_assigned_to.nil?
         parent_issue.assigned_to_id = item.action_assigned_to
         needUpdateflag = true
-      end
-      if needUpdateflag 
-        parent_issue.save
+      # 終了時の担当者のカスタムフィールドが設定されていたら、
+      # カスタムフィールドで指定されたユーザを担当者にする
+      elsif !item.action_assigned_to_custom_field.nil?
+        cf = parent_issue.custom_field_values.detect {|v| v.custom_field_id == item.action_assigned_to_custom_field }
+        if cf.present?
+          parent_issue.assigned_to_id = cf.value
+          needUpdateflag = true
+        end
       end
 
+      if needUpdateflag
+        parent_issue.save
+      end
     end
 
     # トリガ対象となっているかを調べる

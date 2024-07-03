@@ -82,7 +82,8 @@ class AutoClosesController < ApplicationController
         :action_status, 
         :action_assigned_to, 
         :action_comment, 
-        :is_action_comment_parent
+        :is_action_comment_parent,
+        :action_assigned_to_custom_field
       )
   end
 

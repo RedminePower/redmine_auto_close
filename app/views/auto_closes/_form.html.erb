@@ -98,7 +98,7 @@
     <p>
       <%= form.select :trigger_custom_field,
             options_for_select(
-              [""] + @auto_close.trigger_custom_fields.all.map{|t| [t.name, t.id]},
+              [""] + @auto_close.bool_custom_fields.all.map{|t| [t.name, t.id]},
               :selected => @auto_close.trigger_custom_field),
               {},
               :disabled => (disabled || false) %>
@@ -136,7 +136,7 @@
               {},
               :disabled => (disabled || false) %>
     </p>
-    <%# 担当 %>
+    <%# 終了時の担当者 %>
     <p>
       <%= form.select :action_assigned_to,
             options_for_select(
@@ -144,6 +144,18 @@
               :selected => @auto_close.action_assigned_to),
               {},
               :disabled => (disabled || false) %>
+    </p>
+    <%# 終了時の担当者を指定するカスタムフィールド %>
+    <p>
+      <%= form.select :action_assigned_to_custom_field,
+            options_for_select(
+              [""] + @auto_close.user_custom_fields.all.map{|t| [t.name, t.id]},
+              :selected => @auto_close.action_assigned_to_custom_field),
+              {},
+              :disabled => (disabled || false) %>
+      <em class="info">
+        <%= l(:text_action_assigned_to_custom_field) %><br />
+      </em>
     </p>
     <%# 終了時コメント %>
     <p>

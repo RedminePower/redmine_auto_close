@@ -63,10 +63,17 @@ class AutoClose < ActiveRecord::Base
   end
 
   #------------------------------
-  # トリガ カスタムフィールド （選択肢）
+  # 真偽値型 カスタムフィールド （選択肢）
   #------------------------------
-  def trigger_custom_fields
+  def bool_custom_fields
     CustomField.where(field_format: 'bool')
+  end
+
+  #------------------------------
+  # ユーザ型 カスタムフィールド （選択肢）
+  #------------------------------
+  def user_custom_fields
+    CustomField.where(field_format: 'user')
   end
 
   def is_triger_child_closed?
