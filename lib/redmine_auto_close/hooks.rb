@@ -99,7 +99,7 @@ module RedmineAutoClose
     def isMatch?(project, parent_issue, item)
 
       # 有効になっているか？
-      retrun false unless item.available?
+      return false unless item.available?
 
       # 子チケット終了になっているか？
       return false unless item.is_triger_child_closed?
