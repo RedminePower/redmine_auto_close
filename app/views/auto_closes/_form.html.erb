@@ -132,7 +132,7 @@
               :disabled => (disabled || false) %>
     </p>
 
-    <%# ステータス %>
+    <%# ステータスを変更 %>
     <p>
       <%= form.select :action_status,
             options_for_select(
@@ -141,7 +141,9 @@
               {},
               :disabled => (disabled || false) %>
     </p>
-    <%# 終了時の担当者 %>
+
+    <%# 担当者を変更 %>
+    <hr style="height: 1px;" >
     <p>
       <%= form.select :action_assigned_to,
             options_for_select(
@@ -150,7 +152,6 @@
               {},
               :disabled => (disabled || false) %>
     </p>
-    <%# 終了時の担当者を指定するカスタムフィールド %>
     <p>
       <%= form.select :action_assigned_to_custom_field,
             options_for_select(
@@ -159,16 +160,18 @@
               {},
               :disabled => (disabled || false) %>
       <em class="info">
-        <%= l(:text_action_assigned_to_custom_field) %><br />
+        <%= l(:text_action_assigned_to_custom_field_info) %><br />
+        <%= l(:text_action_assigned_to_custom_field_info_2) %>
       </em>
     </p>
-    <%# 終了時コメント %>
+
+    <%# コメントを追加 %>
+    <hr style="height: 1px;" >
     <p>
       <%= form.text_area :action_comment,
        :rows => 12,
        :disabled => (disabled || false) %>
     </p>
-    <%# 親チケットにもコメントを残す %>
     <p>
       <%= form.check_box :is_action_comment_parent,
       :disabled => (disabled || false) %>
