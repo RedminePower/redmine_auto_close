@@ -3,8 +3,8 @@
 ## 機能
 
 - このプラグインインは、特定のトリガで、該当チケットのステータスを終了にしたり、担当者を変更したりすることができます。
-  - 初版では、「全子チケット終了時」のトリガのみをサポートしています。
-  - 今後は、「期限切れ時」のトリガもサポート予定です。
+  - 現在は「全子チケット終了時」のトリガのみをサポートしています。
+  - 今後は「期限切れ時」のトリガもサポート予定です。
 - 主に [Redmine Studio](https://www.redmine-power.com/) のレビュー機能と、合わせて使うことで、効果を発揮することができます。
   - 「Redmine Studio」のレビュー機能では、レビュー対象の配下に、レビュー依頼のチケットおよび、レビュー指摘のチケットが作成されます。
   - 全員がレビューを実施済みになり、すべてのレビュー指摘が終了になったら、レビュー開催のチケットを自動で終了にすることができます。 
@@ -28,7 +28,8 @@ $ bundle exec rake redmine:plugins:migrate NAME=redmine_auto_close RAILS_ENV=pro
 1. 「自動クローズ」を押下すると、一覧画面に遷移します。
 ![image](https://user-images.githubusercontent.com/87136359/226633407-4cac6c54-d2fe-4d13-95fb-3c60c7ad765a.png)
 1. 「新しい自動クローズ」を押下し、各種項目を入力し、「作成」ボタンを押下してください。
-![image](https://github.com/RedminePower/redmine_auto_close/assets/87136359/efb3281a-ea96-4f13-b99f-dcfaf70dfa14)
+![image](https://github.com/user-attachments/assets/5973718c-a95b-4c38-836f-9bbad8b97e5a)
+![image](https://github.com/user-attachments/assets/c8958af1-2a6a-4d52-b907-f96265a3c1f8)
 1. 「トリガ」で設定した条件を満たした場合に、「アクション」で指定した内容を実行します。
 
 ## アンインストール
