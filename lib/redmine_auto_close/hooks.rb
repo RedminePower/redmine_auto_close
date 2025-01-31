@@ -55,7 +55,7 @@ module RedmineAutoClose
       end
 
       # 一つも条件を満たさなければ、何もしない。
-      project = context[:project].identifier if context[:project]
+      project = context[:project] if context[:project]
       items = AutoClose.all.order(:id).select {|item| isMatch?(project, parent_issue, item)}
       if items.empty?
         return
@@ -107,7 +107,11 @@ module RedmineAutoClose
       # プロジェクトは対象になっているか？
       if item.project_pattern.present?
         return false unless project.present?
-        return false unless project =~ Regexp.new(item.project_pattern)
+        return false unless project.identifier =~ Regexp.new(item.project_pattern)
+      end
+      if item.project_ids.present? && item.project_ids.any?
+        return false unless project.present?
+        return false unless item.project_ids.any? { |id| project.id == id }
       end
 
       # トラッカーは、対象になっているか？

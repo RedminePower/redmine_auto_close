@@ -10,7 +10,11 @@ class AutoClosesController < ApplicationController
   def index
     sort_init 'id', 'desc'
     sort_update %w(id path_pattern)
-    @auto_closes = AutoClose.order(sort_clause)
+    items = AutoClose.order(sort_clause)
+    for item in items do
+      item.migrate_project_pattern
+    end
+    @auto_closes = items
   end
 
   def new
@@ -20,7 +24,7 @@ class AutoClosesController < ApplicationController
   def create
     @auto_close = AutoClose.new(auto_close_params)
 
-    if @auto_close.save    
+    if @auto_close.save
       flash[:notice] = l(:notice_successful_create)
       redirect_to auto_close_path(@auto_close.id)
     else
@@ -36,6 +40,7 @@ class AutoClosesController < ApplicationController
 
   def update
     @auto_close.attributes = auto_close_params
+    @auto_close.project_ids = params[:auto_close][:project_ids]&.select(&:present?).map(&:to_i) || []
     if @auto_close.save
       flash[:notice] = l(:notice_successful_update)
       redirect_to auto_close_path(@auto_close.id)
@@ -83,7 +88,8 @@ class AutoClosesController < ApplicationController
         :action_assigned_to, 
         :action_comment, 
         :is_action_comment_parent,
-        :action_assigned_to_custom_field
+        :action_assigned_to_custom_field,
+        :project_ids
       )
   end
 

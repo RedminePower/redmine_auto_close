@@ -4,6 +4,36 @@ class AutoClose < ActiveRecord::Base
 
   validate :valid_action
 
+  serialize :project_ids, Array
+
+  def project_ids
+    return super.presence&.map(&:to_i) || []
+  end
+
+  def project_ids=(values)
+    super(values.map(&:to_i))
+  end
+
+  # プロジェクトの設定方法を project_pattern から project_ids に切り替えたので
+  # project_pattern での設定が残っていたら、それをもとに project_ids を設定する
+  def migrate_project_pattern
+    if project_pattern.present?
+      p_ids = Project.all.select { |p| p.identifier =~ Regexp.new(project_pattern) }.map(&:id)
+      Rails.logger.info "#{self.class} id=#{id} title=#{title} migrate project_pattern=#{project_pattern} -> project_ids=#{p_ids}"
+      self.project_ids = p_ids
+      self.project_pattern = nil
+      save
+    end
+  end
+
+  def project_ids_label
+    if project_ids.nil?
+      ""
+    else
+      Project.where(id: project_ids).pluck(:name).join(", ")
+    end
+  end
+
   TRIGGER_TYPES_CHILDREN_CLOSED = "children closed"
   TRIGGER_TYPES_EXPIRED = "expired"
 

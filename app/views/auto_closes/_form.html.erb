@@ -36,12 +36,17 @@
   </p>
   <%# プロジェクト %>
   <p>
-    <%= form.text_field :project_pattern,
-        :size => 100,
-        :disabled => (disabled || false) %>
+    <%= form.select :project_ids,
+          options_for_select(
+            [""] + Project.all.map{|t| [t.name, t.id]},
+            :selected => @auto_close.project_ids),
+          {},
+          :multiple => true,
+          :size => 10,
+          :disabled => (disabled || false) %>
     <em class="info">
-      <%= l(:text_project_pattern_info) %><br />
-      <%= l(:text_project_pattern_notset_info) %>
+      <%= l(:text_project_ids_info) %><br />
+      <%= l(:text_project_ids_notset_info) %>
     </em>
   </p>
   <%# ******************************* %>
