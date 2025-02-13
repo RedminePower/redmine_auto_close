@@ -41,7 +41,7 @@ class AutoClose < ActiveRecord::Base
     :label_triggers_child_closed => TRIGGER_TYPES_CHILDREN_CLOSED,
 #    :label_triggers_expired => TRIGGER_TYPES_EXPIRED,
   }
-    
+
   #------------------------------
   # トリガ種類（選択肢）
   #------------------------------
@@ -115,11 +115,11 @@ class AutoClose < ActiveRecord::Base
   end
 
   def available?
-    is_enabled 
+    is_enabled
   end
 
   def valid_action
-    
+
     #トリガ種類が、期限切れの場合
     if is_triger_expired?
       # アクションユーザーが設定されていなければいけない
@@ -145,7 +145,7 @@ class AutoClose < ActiveRecord::Base
         errors.add(:trigger_subject_pattern, :invalid)
       end
     end
-   
+
     # アクションが一つも設定されていなかった場合
     if action_status.blank? && action_assigned_to.blank? && action_comment.blank?
       errors.add(:action_status, l(:error_set_one_or_more_actios))

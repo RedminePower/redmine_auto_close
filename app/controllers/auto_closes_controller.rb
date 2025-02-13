@@ -23,6 +23,7 @@ class AutoClosesController < ApplicationController
 
   def create
     @auto_close = AutoClose.new(auto_close_params)
+    @auto_close.project_ids = params[:auto_close][:project_ids]&.select(&:present?).map(&:to_i) || []
 
     if @auto_close.save
       flash[:notice] = l(:notice_successful_create)
@@ -74,19 +75,19 @@ class AutoClosesController < ApplicationController
   def auto_close_params
     params.require(:auto_close)
       .permit(
-        :title, 
+        :title,
         :is_enabled,
         :project_pattern,
-        :trigger_type, 
-        :trigger_tracker, 
+        :trigger_type,
+        :trigger_tracker,
         :trigger_subject_pattern,
-        :trigger_status, 
-        :trigger_custom_field, 
-        :trigger_custom_field_boolean, 
-        :action_user, 
-        :action_status, 
-        :action_assigned_to, 
-        :action_comment, 
+        :trigger_status,
+        :trigger_custom_field,
+        :trigger_custom_field_boolean,
+        :action_user,
+        :action_status,
+        :action_assigned_to,
+        :action_comment,
         :is_action_comment_parent,
         :action_assigned_to_custom_field,
         :project_ids
