@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 class AutoClose < ActiveRecord::Base
   after_initialize :set_default_values
   validates_presence_of :title
 
   validate :valid_action
 
-  serialize :project_ids, Array
+  serialize :project_ids, type: Array, coder: YAML
 
   def project_ids
-    return super.presence&.map(&:to_i) || []
+    super.presence&.map(&:to_i) || []
   end
 
   def project_ids=(values)
@@ -17,29 +19,29 @@ class AutoClose < ActiveRecord::Base
   # プロジェクトの設定方法を project_pattern から project_ids に切り替えたので
   # project_pattern での設定が残っていたら、それをもとに project_ids を設定する
   def migrate_project_pattern
-    if project_pattern.present?
-      p_ids = Project.all.select { |p| p.identifier =~ Regexp.new(project_pattern) }.map(&:id)
-      Rails.logger.info "#{self.class} id=#{id} title=#{title} migrate project_pattern=#{project_pattern} -> project_ids=#{p_ids}"
-      self.project_ids = p_ids
-      self.project_pattern = nil
-      save
-    end
+    return if project_pattern.blank?
+
+    p_ids = Project.all.select { |p| p.identifier =~ Regexp.new(project_pattern) }.map(&:id)
+    Rails.logger.info "#{self.class} id=#{id} title=#{title} migrate project_pattern=#{project_pattern} -> project_ids=#{p_ids}"
+    self.project_ids = p_ids
+    self.project_pattern = nil
+    save
   end
 
   def project_ids_label
     if project_ids.nil?
-      ""
+      ''
     else
-      Project.where(id: project_ids).pluck(:name).join(", ")
+      Project.where(id: project_ids).pluck(:name).join(', ')
     end
   end
 
-  TRIGGER_TYPES_CHILDREN_CLOSED = "children closed"
-  TRIGGER_TYPES_EXPIRED = "expired"
+  TRIGGER_TYPES_CHILDREN_CLOSED = 'children closed'
+  TRIGGER_TYPES_EXPIRED = 'expired'
 
   @@trigger_types = {
-    :label_triggers_child_closed => TRIGGER_TYPES_CHILDREN_CLOSED,
-#    :label_triggers_expired => TRIGGER_TYPES_EXPIRED,
+    label_triggers_child_closed: TRIGGER_TYPES_CHILDREN_CLOSED,
+    #    :label_triggers_expired => TRIGGER_TYPES_EXPIRED,
   }
 
   #------------------------------
@@ -61,10 +63,10 @@ class AutoClose < ActiveRecord::Base
   #------------------------------
   def trigger_tracker_label
     if trigger_tracker.nil?
-      ""
+      ''
     else
       temp = Tracker.find_by(id: trigger_tracker)
-      temp.nil? ? "" : temp.name
+      temp.nil? ? '' : temp.name
     end
   end
 
@@ -73,10 +75,10 @@ class AutoClose < ActiveRecord::Base
   #------------------------------
   def trigger_status_label
     if trigger_status.nil?
-      ""
+      ''
     else
       temp = IssueStatus.find_by(id: trigger_status)
-      temp.nil? ? "" : temp.name
+      temp.nil? ? '' : temp.name
     end
   end
 
@@ -85,10 +87,10 @@ class AutoClose < ActiveRecord::Base
   #------------------------------
   def trigger_custom_field_label
     if trigger_custom_field.nil?
-      ""
+      ''
     else
       temp = CustomField.find_by(id: trigger_custom_field)
-      temp.nil? ? "" : temp.name
+      temp.nil? ? '' : temp.name
     end
   end
 
@@ -119,20 +121,17 @@ class AutoClose < ActiveRecord::Base
   end
 
   def valid_action
-
-    #トリガ種類が、期限切れの場合
-    if is_triger_expired?
-      # アクションユーザーが設定されていなければいけない
-      unless action_user.present?
-        errors.add(:path_pattern, :invalid)
-      end
+    # トリガ種類が、期限切れの場合
+    # アクションユーザーが設定されていなければいけない
+    if is_triger_expired? && action_user.blank?
+      errors.add(:path_pattern, :invalid)
     end
 
     # プロジェクトパターンが設定されていた場合
     if project_pattern.present?
       begin
         Regexp.compile(project_pattern)
-      rescue
+      rescue StandardError
         errors.add(:project_pattern, :invalid)
       end
     end
@@ -141,24 +140,23 @@ class AutoClose < ActiveRecord::Base
     if trigger_subject_pattern.present?
       begin
         Regexp.compile(trigger_subject_pattern)
-      rescue
+      rescue StandardError
         errors.add(:trigger_subject_pattern, :invalid)
       end
     end
 
     # アクションが一つも設定されていなかった場合
-    if action_status.blank? && action_assigned_to.blank? && action_comment.blank?
-      errors.add(:action_status, l(:error_set_one_or_more_actios))
-      errors.add(:action_assigned_to, l(:error_set_one_or_more_actios))
-      errors.add(:action_comment, l(:error_set_one_or_more_actios))
-    end
+    return unless action_status.blank? && action_assigned_to.blank? && action_comment.blank?
 
+    errors.add(:action_status, I18n.t(:error_set_one_or_more_actios))
+    errors.add(:action_assigned_to, I18n.t(:error_set_one_or_more_actios))
+    errors.add(:action_comment, I18n.t(:error_set_one_or_more_actios))
   end
 
   private
 
   def set_default_values
     # 現時点では、全子チケット終了しかサポートしていないため、コンストラクタにて設定してしまう。
-    trigger_type = TRIGGER_TYPES_CHILDREN_CLOSED
+    TRIGGER_TYPES_CHILDREN_CLOSED
   end
 end

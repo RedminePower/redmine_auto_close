@@ -15,6 +15,7 @@ en:
   field_trigger_subject_pattern: "Subject pattern"
   field_trigger_subject_pattern_short: "Subject"
   field_trigger_status: "Status"
+  field_trigger_type: "Type"
   field_trigger_custom_field: "Custom Field"
   field_trigger_custom_field_boolean: "Value"
   field_action_user: "Action user"

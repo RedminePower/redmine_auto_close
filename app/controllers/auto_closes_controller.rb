@@ -1,19 +1,19 @@
+# frozen_string_literal: true
+
 class AutoClosesController < ApplicationController
   layout 'admin'
 
   before_action :require_admin
-  before_action :find_auto_close, :except => [:index, :new, :create]
+  before_action :find_auto_close, except: %i[index new create]
 
   helper :sort
   include SortHelper
 
   def index
     sort_init 'id', 'desc'
-    sort_update %w(id path_pattern)
+    sort_update %w[id path_pattern]
     items = AutoClose.order(sort_clause)
-    for item in items do
-      item.migrate_project_pattern
-    end
+    items.each(&:migrate_project_pattern)
     @auto_closes = items
   end
 
@@ -23,13 +23,13 @@ class AutoClosesController < ApplicationController
 
   def create
     @auto_close = AutoClose.new(auto_close_params)
-    @auto_close.project_ids = params[:auto_close][:project_ids]&.select(&:present?).map(&:to_i) || []
+    @auto_close.project_ids = params[:auto_close][:project_ids]&.select(&:present?)&.map(&:to_i) || []
 
     if @auto_close.save
       flash[:notice] = l(:notice_successful_create)
       redirect_to auto_close_path(@auto_close.id)
     else
-      render :action => 'new'
+      render action: 'new'
     end
   end
 
@@ -41,16 +41,16 @@ class AutoClosesController < ApplicationController
 
   def update
     @auto_close.attributes = auto_close_params
-    @auto_close.project_ids = params[:auto_close][:project_ids]&.select(&:present?).map(&:to_i) || []
+    @auto_close.project_ids = params[:auto_close][:project_ids]&.select(&:present?)&.map(&:to_i) || []
     if @auto_close.save
       flash[:notice] = l(:notice_successful_update)
       redirect_to auto_close_path(@auto_close.id)
     else
-      render :action => 'edit'
+      render action: 'edit'
     end
   rescue ActiveRecord::StaleObjectError
     flash.now[:error] = l(:notice_locking_conflict)
-    render :action => 'edit'
+    render action: 'edit'
   end
 
   def update_all
@@ -93,5 +93,4 @@ class AutoClosesController < ApplicationController
         :project_ids
       )
   end
-
 end

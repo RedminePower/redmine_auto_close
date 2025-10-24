@@ -15,6 +15,7 @@ ja:
   field_trigger_subject_pattern: "題名のパターン"
   field_trigger_subject_pattern_short: "題名"
   field_trigger_status: "ステータス"
+  field_trigger_type: "タイプ"
   field_trigger_custom_field: "カスタムフィールド"
   field_trigger_custom_field_boolean: "値"
   field_action_user: "実行ユーザー"
