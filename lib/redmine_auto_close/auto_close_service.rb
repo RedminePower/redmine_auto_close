@@ -28,7 +28,7 @@ module RedmineAutoClose
       end
 
       # Check subject pattern
-      if item.trigger_subject_pattern.present? && !parent_issue.subject =~ (Regexp.new(item.trigger_subject_pattern))
+      if item.trigger_subject_pattern.present? && parent_issue.subject !~ Regexp.new(item.trigger_subject_pattern)
         return false
       end
 
@@ -52,36 +52,42 @@ module RedmineAutoClose
 
     # Apply an auto_close rule to an issue
     def self.apply_rule(rule, issue)
-      needs_update = false
+      # Determine what changes to apply
+      new_status_id = rule.action_status if rule.action_status.present?
 
-      # Add comment if configured
-      if rule.action_comment.present?
-        journal = issue.init_journal(User.current, rule.action_comment)
-        journal.save
-      end
+      new_assigned_to_id = if rule.action_assigned_to.present?
+                             rule.action_assigned_to
+                           elsif rule.action_assigned_to_custom_field.present?
+                             cf_value = issue.custom_field_values.detect { |v|
+                               v.custom_field_id == rule.action_assigned_to_custom_field
+                             }
+                             cf_value.value if cf_value.present?
+                           end
 
-      # Change status if configured
-      if rule.action_status.present?
-        issue.status_id = rule.action_status
-        needs_update = true
-      end
+      needs_update = new_status_id.present? || new_assigned_to_id.present?
 
-      # Change assignee if configured
-      if rule.action_assigned_to.present?
-        issue.assigned_to_id = rule.action_assigned_to
-        needs_update = true
-      # Or set assignee from custom field
-      elsif rule.action_assigned_to_custom_field.present?
-        cf_value = issue.custom_field_values.detect { |v|
-          v.custom_field_id == rule.action_assigned_to_custom_field
-        }
-        if cf_value.present?
-          issue.assigned_to_id = cf_value.value
-          needs_update = true
+      # Save issue changes first if needed with retry on stale object
+      if needs_update
+        retries = 0
+        begin
+          issue.reload # Always reload to get latest version
+          issue.status_id = new_status_id if new_status_id.present?
+          issue.assigned_to_id = new_assigned_to_id if new_assigned_to_id.present?
+          issue.save
+        rescue ActiveRecord::StaleObjectError
+          raise if retries >= 2
+
+          retries += 1
+          retry
         end
       end
 
-      issue.save if needs_update
+      # Add comment after saving (to avoid lock version conflicts)
+      return if rule.action_comment.blank?
+
+      issue.reload
+      journal = issue.init_journal(User.current, rule.action_comment)
+      journal.save
     end
   end
 end

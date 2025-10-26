@@ -124,7 +124,7 @@ class AutoClose < ActiveRecord::Base
     # トリガ種類が、期限切れの場合
     # アクションユーザーが設定されていなければいけない
     if is_triger_expired? && action_user.blank?
-      errors.add(:path_pattern, :invalid)
+      errors.add(:action_user, :invalid)
     end
 
     # プロジェクトパターンが設定されていた場合
