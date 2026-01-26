@@ -108,11 +108,11 @@ class AutoClose < ActiveRecord::Base
     CustomField.where(field_format: 'user')
   end
 
-  def is_triger_child_closed?
+  def is_trigger_child_closed?
     trigger_type == TRIGGER_TYPES_CHILDREN_CLOSED
   end
 
-  def is_triger_expired?
+  def is_trigger_expired?
     trigger_type == TRIGGER_TYPES_EXPIRED
   end
 
@@ -123,7 +123,7 @@ class AutoClose < ActiveRecord::Base
   def valid_action
     # トリガ種類が、期限切れの場合
     # アクションユーザーが設定されていなければいけない
-    if is_triger_expired? && action_user.blank?
+    if is_trigger_expired? && action_user.blank?
       errors.add(:action_user, :invalid)
     end
 
@@ -148,9 +148,9 @@ class AutoClose < ActiveRecord::Base
     # アクションが一つも設定されていなかった場合
     return unless action_status.blank? && action_assigned_to.blank? && action_comment.blank?
 
-    errors.add(:action_status, I18n.t(:error_set_one_or_more_actios))
-    errors.add(:action_assigned_to, I18n.t(:error_set_one_or_more_actios))
-    errors.add(:action_comment, I18n.t(:error_set_one_or_more_actios))
+    errors.add(:action_status, I18n.t(:error_set_one_or_more_actions))
+    errors.add(:action_assigned_to, I18n.t(:error_set_one_or_more_actions))
+    errors.add(:action_comment, I18n.t(:error_set_one_or_more_actions))
   end
 
   private

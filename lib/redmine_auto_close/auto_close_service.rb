@@ -8,7 +8,7 @@ module RedmineAutoClose
       return false unless item.available?
 
       # Check trigger type (must be children closed)
-      return false unless item.is_triger_child_closed?
+      return false unless item.is_trigger_child_closed?
 
       # Check project pattern (legacy support)
       if item.project_pattern.present?

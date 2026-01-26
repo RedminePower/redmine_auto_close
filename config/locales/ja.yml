@@ -15,7 +15,6 @@ ja:
   field_trigger_subject_pattern: "題名のパターン"
   field_trigger_subject_pattern_short: "題名"
   field_trigger_status: "ステータス"
-  field_trigger_type: "タイプ"
   field_trigger_custom_field: "カスタムフィールド"
   field_trigger_custom_field_boolean: "値"
   field_action_user: "実行ユーザー"
@@ -37,4 +36,4 @@ ja:
   text_trigger_custom_field_notset_info: "未指定の場合は、カスタムフィールドに関係なくトリガ対象とします。"
   text_action_assigned_to_custom_field_info: "対象のチケットのカスタムフィールドに設定されているユーザを担当者に設定します。"
   text_action_assigned_to_custom_field_info_2: "「担当者を変更」でユーザが指定されていた場合、そちらが優先されます。"
-  error_set_one_or_more_actios: "いずれか一つ以上のアクションを設定してください。"
+  error_set_one_or_more_actions: "いずれか一つ以上のアクションを設定してください。"
