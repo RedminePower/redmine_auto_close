@@ -12,6 +12,7 @@
 ## 対応Redmine
 - V4.x (V4.2.3にて動作確認済み)
 - V5.x (V5.0.3にて動作確認済み)
+- V6.x (V6.0.3にて動作確認済み)
 
 ## インストール
 Redmineのプラグインのフォルダにて、以下を実行し、Redmineを再起動してください。
@@ -21,6 +22,32 @@ $ cd /var/lib/redmine/plugins
 $ git clone https://github.com/RedminePower/redmine_auto_close.git
 $ bundle exec rake redmine:plugins:migrate NAME=redmine_auto_close RAILS_ENV=production
 ```
+
+## アップグレード方法
+
+### V1.x から V2.0 へのアップグレード
+
+既存のインストールをRedmine 6.x対応版にアップグレードする場合:
+
+1. プラグインのコードを更新:
+```
+$ cd /var/lib/redmine/plugins/redmine_auto_close
+$ git pull
+```
+
+2. Redmineを再起動:
+```
+$ sudo systemctl restart redmine
+```
+
+**重要**: V2.0では、Redmine 6.xとの互換性のために内部実装を変更しましたが、データベーススキーマの変更はありません。マイグレーションの実行は不要です。既存の自動クローズ設定は、そのまま動作します。
+
+### V2.0での主な変更点
+
+- Redmine 6.x (Rails 7.0) に対応
+- 内部実装をコントローラーフックからモデルコールバックに変更
+- より安定した動作を実現
+- 既存のデータベーススキーマと設定には影響なし
 
 ## 使用方法
 1. プラグインをインストールすると、管理者メニューに「自動クローズ」が追加されます。

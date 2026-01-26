@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # このファイルを修正後に適用するためには、以下のコマンドを実行する。
 #--------------------
 # cd C:\Bitnami\redmine-4.2.3-1\apps\redmine\htdocs\plugins\redmine_auto_close
@@ -7,14 +9,14 @@ class CreateAutoCloses < ActiveRecord::Migration[5.2]
   def change
     create_table :auto_closes do |t|
       t.text :title
-      t.boolean :is_enabled, :default => true
+      t.boolean :is_enabled, default: true
       t.text :project_pattern
       t.text :trigger_type
       t.integer :trigger_tracker
       t.text :trigger_subject_pattern
       t.integer :trigger_status
       t.integer :trigger_custom_field
-      t.boolean :trigger_custom_field_boolean, :default => true
+      t.boolean :trigger_custom_field_boolean, default: true
       t.integer :action_user
       t.integer :action_status
       t.integer :action_assigned_to
