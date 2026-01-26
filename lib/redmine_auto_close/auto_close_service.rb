@@ -42,8 +42,10 @@ module RedmineAutoClose
         cf_value = parent_issue.custom_field_values.detect { |v|
           v.custom_field_id == item.trigger_custom_field
         }
-        if cf_value.present? && cf_value.value != item.trigger_custom_field_boolean
-          return false
+        if cf_value.present?
+          # Redmine stores boolean custom field values as '1' (true) or '0' (false) in text column
+          cf_value_to_bool = (cf_value.value == '1')
+          return false if cf_value_to_bool != item.trigger_custom_field_boolean
         end
       end
 
