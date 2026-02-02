@@ -91,14 +91,14 @@ class AutoCloseTest < ActiveSupport::TestCase
     assert_equal :label_triggers_child_closed, auto_close.trigger_type_label
   end
 
-  test 'is_triger_child_closed? should return true for children closed trigger' do
+  test 'is_trigger_child_closed? should return true for children closed trigger' do
     auto_close = AutoClose.new(trigger_type: AutoClose::TRIGGER_TYPES_CHILDREN_CLOSED)
-    assert auto_close.is_triger_child_closed?
+    assert auto_close.is_trigger_child_closed?
   end
 
-  test 'is_triger_expired? should return true for expired trigger' do
+  test 'is_trigger_expired? should return true for expired trigger' do
     auto_close = AutoClose.new(trigger_type: AutoClose::TRIGGER_TYPES_EXPIRED)
-    assert auto_close.is_triger_expired?
+    assert auto_close.is_trigger_expired?
   end
 
   test 'available? should return is_enabled value' do
