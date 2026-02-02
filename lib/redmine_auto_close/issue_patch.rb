@@ -30,8 +30,8 @@ module RedmineAutoClose
         return unless parent_issue
 
         # Check all children (descendants) of parent
-        all_children_closed = parent_issue.descendants.visible.all? do |child|
-          child.id == id || IssueStatus.find_by(id: child.status_id)&.is_closed?
+        all_children_closed = parent_issue.descendants.visible.includes(:status).all? do |child|
+          child.id == id || child.status&.is_closed?
         end
 
         return unless all_children_closed

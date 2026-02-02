@@ -39,16 +39,16 @@ class AutoClose < ActiveRecord::Base
   TRIGGER_TYPES_CHILDREN_CLOSED = 'children closed'
   TRIGGER_TYPES_EXPIRED = 'expired'
 
-  @@trigger_types = {
+  TRIGGER_TYPES = {
     label_triggers_child_closed: TRIGGER_TYPES_CHILDREN_CLOSED,
-    #    :label_triggers_expired => TRIGGER_TYPES_EXPIRED,
-  }
+    # label_triggers_expired: TRIGGER_TYPES_EXPIRED,
+  }.freeze
 
   #------------------------------
   # トリガ種類（選択肢）
   #------------------------------
   def trigger_types
-    @@trigger_types
+    TRIGGER_TYPES
   end
 
   #------------------------------
@@ -156,7 +156,6 @@ class AutoClose < ActiveRecord::Base
   private
 
   def set_default_values
-    # 現時点では、全子チケット終了しかサポートしていないため、コンストラクタにて設定してしまう。
-    TRIGGER_TYPES_CHILDREN_CLOSED
+    self.trigger_type ||= TRIGGER_TYPES_CHILDREN_CLOSED
   end
 end

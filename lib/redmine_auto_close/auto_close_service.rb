@@ -87,9 +87,20 @@ module RedmineAutoClose
       # Add comment after saving (to avoid lock version conflicts)
       return if rule.action_comment.blank?
 
+      # 自動クローズ対象のチケットにコメント追加
       issue.reload
       journal = issue.init_journal(User.current, rule.action_comment)
       journal.save
+
+      # 親チケット（祖父）にもコメント追加
+      if rule.is_action_comment_parent && issue.parent_id.present?
+        parent = Issue.find_by(id: issue.parent_id)
+        if parent.present?
+          parent.reload
+          parent_journal = parent.init_journal(User.current, rule.action_comment)
+          parent_journal.save
+        end
+      end
     end
   end
 end
