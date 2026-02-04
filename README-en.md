@@ -28,6 +28,7 @@ Periodically checks tickets that have passed their due date and executes actions
 
 **Characteristics:**
 - Scheduled execution via cron (daily at 3:00)
+  - Execution logs are output to `log/auto_close.log` (see `log/production.log` for details)
   - To run manually:
   ```
   $ bundle exec rake redmine_auto_close:check_expired RAILS_ENV=production

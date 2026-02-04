@@ -60,6 +60,7 @@ namespace :redmine_auto_close do
       summary += " (#{details.join(' / ')})"
     end
     Rails.logger.info summary
+    puts summary # cron の stdout リダイレクトで /log/auto_close.log に出力
   end
 
   desc 'プラグインのセットアップ（DBマイグレーション + cron登録）'

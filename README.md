@@ -28,6 +28,7 @@
 
 **特徴:**
 - cron による定期実行（毎日 3:00）
+  - 実行ログは `log/auto_close.log` に出力（詳細は `log/production.log` を確認）
   - 手動で実行する場合
   ```
   $ bundle exec rake redmine_auto_close:check_expired RAILS_ENV=production

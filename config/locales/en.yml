@@ -10,7 +10,6 @@ en:
   field_title: "Title"
   field_is_enabled: "Enabled"
   field_project_ids: "Projects"
-  field_trigger: "Trigger type"
   field_trigger_tracker: "Tracker"
   field_trigger_subject_pattern: "Subject pattern"
   field_trigger_subject_pattern_short: "Subject"
