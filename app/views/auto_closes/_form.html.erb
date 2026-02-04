@@ -1,17 +1,25 @@
 <%= javascript_tag do %>
   $(function() {
-    <%# 初期表示は非表示とする %>
-    if ($("#auto_close_trigger_type").val() != "expired") {
-      $("#auto_close_action_user_area").hide();
-    }
-
-    <%# トリガ種類が変更されたら、動的に表示/非表示を切り替える %>
-    $("#auto_close_trigger_type").change(function() {
-      if ($(this).val() === "expired") {
+    function updateExpiredVisibility() {
+      if ($("#auto_close_trigger_type").val() === "expired") {
         $("#auto_close_action_user_area").show();
+        $("#auto_close_action_user_separator").show();
+        $("#auto_close_max_issues_area").show();
+        $("#auto_close_expired_warning").show();
       } else {
         $("#auto_close_action_user_area").hide();
+        $("#auto_close_action_user_separator").hide();
+        $("#auto_close_max_issues_area").hide();
+        $("#auto_close_expired_warning").hide();
       }
+    }
+
+    <%# 初期表示 %>
+    updateExpiredVisibility();
+
+    <%# トリガー種類が変更されたら、動的に表示/非表示を切り替える %>
+    $("#auto_close_trigger_type").change(function() {
+      updateExpiredVisibility();
     });
   });
 <% end %>
@@ -50,10 +58,10 @@
     </em>
   </p>
   <%# ******************************* %>
-  <%# トリガ                           %>
+  <%# トリガー                          %>
   <%# ******************************* %>
   <%= field_set_tag l(:label_trigger) do %>
-    <%# トリガ種類 %>
+    <%# トリガー種類 %>
     <%# disabled と required を、二つ指定すると動作しなくなってしまったので、disabled を優先した。 %>
     <p>
       <%= form.select :trigger_type,
@@ -62,6 +70,20 @@
               :selected => @auto_close.trigger_type),
             {},
             :disabled => (disabled ? true : false) %>
+    </p>
+    <%# 期限切れトリガーの警告メッセージ %>
+    <div id="auto_close_expired_warning" class="warning" style="display: none; padding: 10px; margin: 10px 0; background-color: #ffeeba; border: 1px solid #ffc107; border-radius: 4px;">
+      <%= l(:warning_expired_trigger) %>
+    </div>
+    <%# 一度に処理する最大件数（期限切れトリガー用） %>
+    <p id="auto_close_max_issues_area" style="display: none;">
+      <%= form.number_field :max_issues_per_run,
+          :min => 1,
+          :required => true,
+          :disabled => (disabled || false) %>
+      <em class="info">
+        <%= l(:text_max_issues_per_run_info) %>
+      </em>
     </p>
     <%# トラッカー %>
     <p>
@@ -122,15 +144,19 @@
   <%# アクション                       %>
   <%# ******************************* %>
   <%= field_set_tag l(:label_action) do %>
-    <%# ユーザー %>
-    <p id="auto_close_action_user_area">
+    <%# 実行ユーザー（期限切れトリガー用） %>
+    <p id="auto_close_action_user_area" style="display: none;">
       <%= form.select :action_user,
             options_for_select(
-              User.where(status: 1).collect{|u| [u.name, u.id]},
+              @auto_close.action_user_options,
               :selected => @auto_close.action_user),
               {},
               :disabled => (disabled || false) %>
+      <em class="info">
+        <%= l(:text_action_user_info) %>
+      </em>
     </p>
+    <hr id="auto_close_action_user_separator" style="display: none; height: 1px;">
 
     <%# ステータスを変更 %>
     <p>

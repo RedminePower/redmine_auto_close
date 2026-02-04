@@ -3,6 +3,7 @@
 class AutoClose < ActiveRecord::Base
   after_initialize :set_default_values
   validates_presence_of :title
+  validates :max_issues_per_run, presence: true, numericality: { only_integer: true, greater_than: 0 }
 
   validate :valid_action
 
@@ -41,21 +42,26 @@ class AutoClose < ActiveRecord::Base
 
   TRIGGER_TYPES = {
     label_triggers_child_closed: TRIGGER_TYPES_CHILDREN_CLOSED,
-    # label_triggers_expired: TRIGGER_TYPES_EXPIRED,
+    label_triggers_expired: TRIGGER_TYPES_EXPIRED,
   }.freeze
 
+  # action_user の特殊値
+  ACTION_USER_ASSIGNEE = 'assignee'
+  ACTION_USER_AUTHOR = 'author'
+  ACTION_USER_PARENT_ASSIGNEE = 'parent_assignee'
+
   #------------------------------
-  # トリガ種類（選択肢）
+  # トリガー種類（選択肢）
   #------------------------------
   def trigger_types
     TRIGGER_TYPES
   end
 
   #------------------------------
-  # トリガ種類（ラベル）
+  # トリガー種類（ラベル）
   #------------------------------
   def trigger_type_label
-    @@trigger_types.key(trigger_type)
+    TRIGGER_TYPES.key(trigger_type)
   end
 
   #------------------------------
@@ -102,10 +108,40 @@ class AutoClose < ActiveRecord::Base
   end
 
   #------------------------------
-  # ユーザ型 カスタムフィールド （選択肢）
+  # ユーザー型 カスタムフィールド （選択肢）
   #------------------------------
   def user_custom_fields
     CustomField.where(field_format: 'user')
+  end
+
+  #------------------------------
+  # 実行ユーザー（選択肢）
+  #------------------------------
+  def action_user_options
+    special_options = [
+      [I18n.t(:label_issue_assignee), ACTION_USER_ASSIGNEE],
+      [I18n.t(:label_issue_author), ACTION_USER_AUTHOR],
+      [I18n.t(:label_parent_assignee), ACTION_USER_PARENT_ASSIGNEE],
+    ]
+    user_options = User.where(status: 1).collect { |u| [u.name, u.id.to_s] }
+    special_options + user_options
+  end
+
+  #------------------------------
+  # 実行ユーザー（ラベル）
+  #------------------------------
+  def action_user_label
+    case action_user
+    when ACTION_USER_ASSIGNEE
+      I18n.t(:label_issue_assignee)
+    when ACTION_USER_AUTHOR
+      I18n.t(:label_issue_author)
+    when ACTION_USER_PARENT_ASSIGNEE
+      I18n.t(:label_parent_assignee)
+    else
+      user = User.find_by(id: action_user)
+      user&.name || ''
+    end
   end
 
   def is_trigger_child_closed?
@@ -121,10 +157,23 @@ class AutoClose < ActiveRecord::Base
   end
 
   def valid_action
-    # トリガ種類が、期限切れの場合
+    # トリガー種類が、期限切れの場合
     # アクションユーザーが設定されていなければいけない
     if is_trigger_expired? && action_user.blank?
       errors.add(:action_user, :invalid)
+    end
+
+    # トリガー種類が、期限切れの場合
+    # 少なくとも1つの条件が設定されていなければいけない
+    if is_trigger_expired?
+      has_condition = (project_ids.present? && project_ids.any?) ||
+                      trigger_tracker.present? ||
+                      trigger_subject_pattern.present? ||
+                      trigger_status.present? ||
+                      trigger_custom_field.present?
+      unless has_condition
+        errors.add(:base, I18n.t(:error_expired_requires_condition))
+      end
     end
 
     # プロジェクトパターンが設定されていた場合
@@ -136,7 +185,7 @@ class AutoClose < ActiveRecord::Base
       end
     end
 
-    # トリガ題名パターンが設定されていた場合
+    # トリガー題名パターンが設定されていた場合
     if trigger_subject_pattern.present?
       begin
         Regexp.compile(trigger_subject_pattern)
@@ -157,5 +206,7 @@ class AutoClose < ActiveRecord::Base
 
   def set_default_values
     self.trigger_type ||= TRIGGER_TYPES_CHILDREN_CLOSED
+    self.action_user ||= ACTION_USER_ASSIGNEE
+    self.max_issues_per_run ||= 50
   end
 end

@@ -85,6 +85,7 @@ class AutoClosesController < ApplicationController
         :trigger_custom_field,
         :trigger_custom_field_boolean,
         :action_user,
+        :max_issues_per_run,
         :action_status,
         :action_assigned_to,
         :action_comment,
