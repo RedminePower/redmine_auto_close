@@ -15,13 +15,13 @@
       <%= sort_header_tag('id', :caption => '#') %>
       <%= sort_header_tag('is_enabled', :caption => l(:field_is_enabled)) %>
       <%= sort_header_tag('title', :caption => l(:field_title)) %>
-      <%= sort_header_tag('project_ids', :caption => l(:field_project_ids)) %>
-      <%= sort_header_tag('trigger_type', :caption => l(:field_trigger_type)) %>
-      <%= sort_header_tag('trigger_tracker', :caption => l(:field_trigger_tracker)) %>
-      <%= sort_header_tag('trigger_subject_pattern', :caption => l(:field_trigger_subject_pattern_short)) %>
-      <%= sort_header_tag('trigger_status', :caption => l(:field_trigger_status)) %>
-      <%= sort_header_tag('trigger_custom_field', :caption => l(:field_trigger_custom_field)) %>
-      <%= sort_header_tag('trigger_custom_field_boolean', :caption => l(:field_trigger_custom_field_boolean)) %>
+      <th><%= l(:field_project_ids) %></th>
+      <th><%= l(:field_trigger_type) %></th>
+      <th><%= l(:field_trigger_tracker) %></th>
+      <th><%= l(:field_trigger_subject_pattern_short) %></th>
+      <th><%= l(:field_trigger_status) %></th>
+      <th><%= l(:field_trigger_custom_field) %></th>
+      <th><%= l(:field_trigger_custom_field_boolean) %></th>
     </tr>
   </thead>
   <tbody>

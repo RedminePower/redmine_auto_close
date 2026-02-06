@@ -7,7 +7,12 @@ class AutoClose < ActiveRecord::Base
 
   validate :valid_action
 
-  serialize :project_ids, type: Array, coder: YAML
+  # Rails 7.1+ では serialize の引数が変更された
+  if Rails::VERSION::MAJOR >= 7 && Rails::VERSION::MINOR >= 1
+    serialize :project_ids, type: Array, coder: YAML
+  else
+    serialize :project_ids, Array
+  end
 
   def project_ids
     super.presence&.map(&:to_i) || []
@@ -30,7 +35,7 @@ class AutoClose < ActiveRecord::Base
   end
 
   def project_ids_label
-    if project_ids.nil?
+    if project_ids.empty?
       ''
     else
       Project.where(id: project_ids).pluck(:name).join(', ')

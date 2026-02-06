@@ -11,7 +11,7 @@ class AutoClosesController < ApplicationController
 
   def index
     sort_init 'id', 'desc'
-    sort_update %w[id path_pattern]
+    sort_update %w(id title is_enabled)
     items = AutoClose.order(sort_clause)
     items.each(&:migrate_project_pattern)
     @auto_closes = items
@@ -53,13 +53,6 @@ class AutoClosesController < ApplicationController
     render action: 'edit'
   end
 
-  def update_all
-    AutoClose.update_all(auto_close_params.to_hash)
-
-    flash[:notice] = l(:notice_successful_update)
-    redirect_to auto_closes_path
-  end
-
   def destroy
     @auto_close.destroy
     redirect_to auto_closes_path
@@ -69,7 +62,6 @@ class AutoClosesController < ApplicationController
 
   def find_auto_close
     @auto_close = AutoClose.find(params[:id])
-    render_404 unless @auto_close
   end
 
   def auto_close_params
