@@ -47,11 +47,23 @@ Periodically checks tickets that have passed their due date and executes actions
 - Redmine 6.x (tested with 6.1.1)
 
 ## Installation
+
+The Redmine installation path varies depending on your environment.
+The following instructions use `/var/lib/redmine`.
+Please adjust according to your environment.
+
+| Environment | Redmine Path |
+|-------------|--------------|
+| apt (Debian/Ubuntu) | `/var/lib/redmine` |
+| Docker (Official Image) | `/usr/src/redmine` |
+| Bitnami | `/opt/bitnami/redmine` |
+
 Run the following commands and restart Redmine.
 
 ```
-$ cd /path/to/redmine/plugins
+$ cd /var/lib/redmine/plugins
 $ git clone https://github.com/RedminePower/redmine_auto_close.git
+$ cd /var/lib/redmine
 $ bundle exec rake redmine_auto_close:install RAILS_ENV=production
 ```
 
@@ -64,8 +76,9 @@ Run the following commands and restart Redmine.
 Existing "Auto Close" settings will be preserved.
 
 ```
-$ cd /path/to/redmine/plugins/redmine_auto_close
+$ cd /var/lib/redmine/plugins/redmine_auto_close
 $ git pull
+$ cd /var/lib/redmine
 $ bundle exec rake redmine_auto_close:install RAILS_ENV=production
 ```
 
@@ -84,7 +97,7 @@ $ bundle exec rake redmine_auto_close:install RAILS_ENV=production
 Run the following commands and restart Redmine.
 
 ```
-$ cd /path/to/redmine
+$ cd /var/lib/redmine
 $ bundle exec rake redmine_auto_close:uninstall RAILS_ENV=production
 $ rm -rf plugins/redmine_auto_close
 ```

@@ -47,11 +47,23 @@
 - Redmine 6.x（6.1.1 にて動作確認済み）
 
 ## インストール
+
+Redmine のインストール先はお使いの環境によって異なります。
+以下の説明では `/var/lib/redmine` を使用しています。
+お使いの環境に合わせて変更してください。
+
+| 環境 | Redmine パス |
+|------|-------------|
+| apt (Debian/Ubuntu) | `/var/lib/redmine` |
+| Docker (公式イメージ) | `/usr/src/redmine` |
+| Bitnami | `/opt/bitnami/redmine` |
+
 以下を実行し、Redmineを再起動してください。
 
 ```
-$ cd /path/to/redmine/plugins
+$ cd /var/lib/redmine/plugins
 $ git clone https://github.com/RedminePower/redmine_auto_close.git
+$ cd /var/lib/redmine
 $ bundle exec rake redmine_auto_close:install RAILS_ENV=production
 ```
 
@@ -64,8 +76,9 @@ $ bundle exec rake redmine_auto_close:install RAILS_ENV=production
 既存の「自動クローズ」設定は、そのまま引き継がれます。
 
 ```
-$ cd /path/to/redmine/plugins/redmine_auto_close
+$ cd /var/lib/redmine/plugins/redmine_auto_close
 $ git pull
+$ cd /var/lib/redmine
 $ bundle exec rake redmine_auto_close:install RAILS_ENV=production
 ```
 
@@ -84,7 +97,7 @@ $ bundle exec rake redmine_auto_close:install RAILS_ENV=production
 以下を実行し、Redmineを再起動してください。
 
 ```
-$ cd /path/to/redmine
+$ cd /var/lib/redmine
 $ bundle exec rake redmine_auto_close:uninstall RAILS_ENV=production
 $ rm -rf plugins/redmine_auto_close
 ```
